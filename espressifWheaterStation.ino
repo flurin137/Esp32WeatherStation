@@ -83,14 +83,28 @@ void loop()
     eCO2 = ccs.geteCO2();
     tvoc = ccs.getTVOC();
 
-    lcd.setCursor(0,0);
-    lcd.print(String("Humidity    ") + String(humidity, 1)    + String(" C"));
-    lcd.setCursor(0,1);
-    lcd.print(String("Temperature ") + String(temperature, 1) + String(" %"));
-    lcd.setCursor(0,2);
-    lcd.print(String("Pressure    ") + String(pressure, 1)    + String(" kPa"));
-    lcd.setCursor(0,3);
-    lcd.print(String("eCO2       ") + String(eCO2, 1)         + String(" ppm"));
+    lcd.setCursor(0, 0);
+    lcd.print(String("Humidity    ") + String(humidity, 1)    + String(" %"));
+    lcd.setCursor(0, 1);
+    lcd.print(String("Temperature ") + String(temperature, 1) + String(" C"));
+    lcd.setCursor(0, 2);
+    if(pressure >= 100.0)
+    {
+        lcd.print(String("Pressure   ") + String(pressure, 1)         + String(" kPa"));
+    }
+    else
+    {
+        lcd.print(String("Pressure    ") + String(pressure, 1)         + String(" kPa"));
+    }
+    lcd.setCursor(0, 3);
+    if(eCO2 >= 1000.0)
+    {
+        lcd.print(String("eCO2      ") + String(eCO2, 1)         + String(" ppm"));
+    }
+    else
+    {
+        lcd.print(String("eCO2       ") + String(eCO2, 1)         + String(" ppm"));
+    }
  
     delay(5000);
 }

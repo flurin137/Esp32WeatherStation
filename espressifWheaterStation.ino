@@ -8,8 +8,7 @@
 #include <Adafruit_CCS811.h>
 #include <LiquidCrystal_I2C.h>
 
-LiquidCrystal_I2C lcd(0x27,20,4);//set the LCD address to 0x27 for a 16 chars and 2 line display
-
+LiquidCrystal_I2C lcd(0x27,20,4);
 
 const char *SSID = "**";
 const char *PASSWORD = "**";
@@ -31,15 +30,14 @@ void setup()
 
     if (!SPIFFS.begin(true))
     {
-        Serial.println("Dateisystem konnte nicht initialisiert werden.");
+        Serial.println("Filesystem initailization error.");
         return;
     }
 
     htu.begin();
     mpl115a2.begin();
     ccs.begin();
-    while (!ccs.available())
-        ;
+    while (!ccs.available());
 
     WiFi.mode(WIFI_STA);
     WiFi.begin(SSID, PASSWORD);
@@ -71,7 +69,6 @@ void setup()
     lcd.print("Hello, world!");
     lcd.setCursor(0,1);
     lcd.print("by EasyIoT");
-
 }
 
 void loop()
@@ -82,6 +79,12 @@ void loop()
     ccs.readData();
     eCO2 = ccs.geteCO2();
     tvoc = ccs.getTVOC();
+
+    Serial.println(String("--- MEasured Data --- "));
+    Serial.println(String("Humidity ") + String(humidity, 1) + String(" %"));
+    Serial.println(String("Temperature ") + String(temperature, 1) + String(" C"));
+    Serial.println(String("Pressure ") + String(pressure, 1) + String(" kPa"));
+    Serial.println(String("eCO2 ") + String(eCO2, 1) + String(" ppm"));
 
     lcd.setCursor(0, 0);
     lcd.print(String("Humidity    ") + String(humidity, 1)    + String(" %"));
@@ -97,7 +100,11 @@ void loop()
         lcd.print(String("Pressure    ") + String(pressure, 1)         + String(" kPa"));
     }
     lcd.setCursor(0, 3);
-    if(eCO2 >= 1000.0)
+    if(eCO2 >= 10000.0)
+    {
+        lcd.print(String("eCO2     ") + String(eCO2, 1)         + String(" ppm"));
+    }
+    else if(eCO2 >= 1000.0)
     {
         lcd.print(String("eCO2      ") + String(eCO2, 1)         + String(" ppm"));
     }
